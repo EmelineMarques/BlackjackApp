@@ -12,8 +12,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-import java.text.NumberFormat;
-
 public class BlackjackApp extends Application {
     static BlackjackGame game;
     private TextField moneyField;
@@ -26,12 +24,9 @@ public class BlackjackApp extends Application {
 
         System.out.println ( "BLACKJACK!" );
         System.out.println ( "Blackjack payout is 3:2 \n\n" );
+
         String playAgain = "y";
         game = new BlackjackGame ();
-
-        /*Launches the app*/
-        launch (args);
-        /*Launches the app*/
 
         while ( playAgain.equalsIgnoreCase ( "y" ) ) {
             showMoney ();
@@ -66,6 +61,10 @@ public class BlackjackApp extends Application {
             }
         }
         System.out.println ( "\nBye!" );
+
+        /*Launches the app*/
+        launch (args);
+
     }
 
     private static boolean buyMoreChips () {
@@ -156,19 +155,15 @@ public class BlackjackApp extends Application {
         grid.add(moneyField,1,0);
 
         grid.add(new Label ("Bet :"), 0,1);
-        betField = new TextField ();
+        betField = new TextField ("");
         grid.add(betField,1,1);
 
         grid.add(new Label ("DEALER"), 0,2);
 
         grid.add(new Label ("Cards :"),0,3);
         ListView listCardDealer = new ListView ();
-        listCardDealer.getItems().add("Item 1");
-        listCardDealer.getItems().add("Item 2");
-        listCardDealer.getItems().add("Item 3");
-
+        listCardDealer.getItems().add(game.getDealerHand());
         HBox dealerBox = new HBox(listCardDealer);
-
         grid.add(listCardDealer,1,3);
 
         grid.add(new Label ("Points :"),0,4);
@@ -179,9 +174,7 @@ public class BlackjackApp extends Application {
 
         grid.add(new Label ("Cards :"),0,6);
         ListView listCardPlayer = new ListView ();
-        listCardPlayer.getItems().add("Item 1");
-        listCardPlayer.getItems().add("Item 2");
-        listCardPlayer.getItems().add("Item 3");
+        listCardPlayer.getItems().add(game.getPlayerHand());
         HBox playerBox = new HBox(listCardPlayer);
         grid.add(listCardPlayer,1,6);
 
@@ -201,7 +194,7 @@ public class BlackjackApp extends Application {
         grid.add (buttonBox,0,8,2,1);
 
         grid.add(new Label ("RESULT :"),0,9);
-        resultField = new TextField ();
+        resultField = new TextField ("");
         grid.add(resultField,1,9);
 
         Button playButton = new Button ("Play");
@@ -224,12 +217,15 @@ public class BlackjackApp extends Application {
     }
 
     private void hitButtonClicked(){
+        game.hit ();
         resultField.setText ( "you've pressed Hit!" );
     }
     private void standButtonClicked(){
+        game.stand ();
         resultField.setText ( "you've pressed Stand!" );
     }
     private void playButtonClicked(){
+        game.resetHands ();
         resultField.setText ( "you've pressed Play!" );
     }
     private void exitButtonClicked(){
