@@ -17,14 +17,20 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloApplication extends Application {
+
+    static BlackjackApp bjackApp;
     private TextField moneyField;
     private TextField betField;
     private TextField cardsField;
     private TextField pointField;
     private TextField resultField;
 
+
     @Override
     public void start (Stage stage){
+
+        bjackApp = new BlackjackApp ();
+
         stage.setTitle ("Blackjack");
         GridPane grid = new GridPane();
         grid.setAlignment (Pos.TOP_LEFT);
@@ -33,7 +39,6 @@ public class HelloApplication extends Application {
         grid.setVgap (10);
 
         Scene scene = new Scene (grid, 400,700);
-
 
         /* Fonction getmoney, l'argent de la banque */
 
@@ -118,24 +123,20 @@ public class HelloApplication extends Application {
         stage.setScene (scene);
         stage.show ();
     }
+
     private void hitButtonClicked(){
-
-
+        resultField.setText ( "you've pressed Hit!" );
     }
     private void standButtonClicked(){
-
-
+        resultField.setText ( "you've pressed Stand!" );
     }
     private void playButtonClicked(){
-//If else pour disable ou non les boutons
-
+        resultField.setText ( "you've pressed Play!" );
     }
     private void exitButtonClicked(){
-
-
+        resultField.setText ( "you've pressed Exit! Beubye Now!" );
     }
     public static void main (String[] args) {
-        launch ();    }
-
-
+        launch (args);
+    }
 }
