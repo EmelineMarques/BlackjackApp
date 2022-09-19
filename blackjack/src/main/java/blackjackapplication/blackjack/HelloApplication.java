@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -37,8 +38,10 @@ public class HelloApplication extends Application {
         /* Fonction getmoney, l'argent de la banque */
 
         grid.add(new Label ("Money :"), 0,0);
-        /*moneyField = new TextField ();*/
-        grid.add(BlackjackApp.game.getTotalMoney (),1,0);
+        moneyField = new TextField ();
+        moneyField.setText("100");
+        moneyField.setEditable (false);
+        grid.add(moneyField,1,0);
 
         grid.add(new Label ("Bet :"), 0,1);
         betField = new TextField ();
