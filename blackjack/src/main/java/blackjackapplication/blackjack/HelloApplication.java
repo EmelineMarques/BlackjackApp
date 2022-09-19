@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
 import java.io.IOException;
 
 public class HelloApplication extends Application {
@@ -26,18 +25,20 @@ public class HelloApplication extends Application {
     @Override
     public void start (Stage stage){
         stage.setTitle ("Blackjack");
-
         GridPane grid = new GridPane();
         grid.setAlignment (Pos.TOP_LEFT);
         grid.setPadding (new Insets (25,25,25,25));
         grid.setHgap (10);
         grid.setVgap (10);
 
-        Scene scene = new Scene (grid, 400,400);
+        Scene scene = new Scene (grid, 400,700);
+
+
+        /* Fonction getmoney, l'argent de la banque */
 
         grid.add(new Label ("Money :"), 0,0);
-        moneyField = new TextField ();
-        grid.add(moneyField,1,0);
+        /*moneyField = new TextField ();*/
+        grid.add(BlackjackApp.game.getTotalMoney (),1,0);
 
         grid.add(new Label ("Bet :"), 0,1);
         betField = new TextField ();
@@ -45,9 +46,19 @@ public class HelloApplication extends Application {
 
         grid.add(new Label ("DEALER"), 0,2);
 
-        grid.add(new Label ("Cards :"),0,3);
+        /*grid.add(new Label ("Cards :"),0,3);
         cardsField = new TextField ();
-        grid.add(cardsField,1,3);
+        grid.add(cardsField,1,3);*/
+
+        grid.add(new Label ("Cards :"),0,3);
+        ListView listCardDealer = new ListView ();
+        listCardDealer.getItems().add("Item 1");
+        listCardDealer.getItems().add("Item 2");
+        listCardDealer.getItems().add("Item 3");
+
+        HBox dealerBox = new HBox(listCardDealer);
+
+        grid.add(listCardDealer,1,3);
 
         grid.add(new Label ("Points :"),0,4);
         pointField = new TextField ();
@@ -60,8 +71,12 @@ public class HelloApplication extends Application {
         grid.add(cardsField,1,6);*/
 
         grid.add(new Label ("Cards :"),0,6);
-        ListView listCard = new ListView ();
-        grid.add(listCard,1,6);
+        ListView listCardPlayer = new ListView ();
+        listCardPlayer.getItems().add("Item 1");
+        listCardPlayer.getItems().add("Item 2");
+        listCardPlayer.getItems().add("Item 3");
+        HBox playerBox = new HBox(listCardPlayer);
+        grid.add(listCardPlayer,1,6);
 
         grid.add(new Label ("Points :"),0,7);
         pointField = new TextField ();
@@ -93,6 +108,10 @@ public class HelloApplication extends Application {
         buttonBox2.getChildren ().add (exitButton);
         grid.add (buttonBox2,0,10,2,1);
 
+        Scene scene2 = new Scene (dealerBox,200,100);
+        Scene scene3 = new Scene (playerBox,200,100);
+        stage.setScene (scene2);
+        stage.setScene (scene3);
         stage.setScene (scene);
         stage.show ();
     }
@@ -105,7 +124,7 @@ public class HelloApplication extends Application {
 
     }
     private void playButtonClicked(){
-
+//If else pour disable ou non les boutons
 
     }
     private void exitButtonClicked(){
@@ -113,6 +132,7 @@ public class HelloApplication extends Application {
 
     }
     public static void main (String[] args) {
-        launch ();
-    }
+        launch ();    }
+
+
 }
