@@ -219,16 +219,21 @@ public class BlackjackApp extends Application {
     }
 
     private void hitButtonClicked(){
-        game.hit ();
         resultField.setText ( "you've pressed Hit!" );
+        System.out.println ( "you've pressed Hit!" );
+        game.hit ();
     }
     private void standButtonClicked(){
-        game.stand ();
         resultField.setText ( "you've pressed Stand!" );
+        System.out.println ( "you've pressed Stand!" );
+        game.stand ();
+        showWinner ();
     }
     private void playButtonClicked(){
-        game.deal ();
         resultField.setText ( "you've pressed Play!" );
+        System.out.println ( "you've pressed Play!" );
+        game.resetHands ();
+        game.deal ();
     }
     private void exitButtonClicked(){
         System.exit ( 0 );
