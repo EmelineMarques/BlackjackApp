@@ -18,6 +18,9 @@ public class BlackjackApp extends Application {
     private TextField betField;
     private TextField pointField;
     private TextField resultField;
+    private ListView listCardDealer;
+    private ListView listCardPlayer;
+    private Button hitButton;
 
     public static void main (String[] args) {
 
@@ -69,7 +72,7 @@ public class BlackjackApp extends Application {
         System.out.println ( "\nBye!" );*/
     }
 
-    private static boolean buyMoreChips () {
+    private boolean buyMoreChips () {
         String addMore = Console.getString ( "You are out of Money! \nWould you buy more? (Press y or n) : ", new String[]{"y", "n"} );
         if ( addMore.equalsIgnoreCase ( "y" ) ) {
             game.resetMoney ();
@@ -78,44 +81,79 @@ public class BlackjackApp extends Application {
             return false;
         }
     }
-    private static void getBetAmount () {
+
+    /*private void getBetAmount () {
         double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
         game.setBet ( betAmount );
         System.out.println ();
+    }*/
+    private boolean getFxBetAmount () {
+        //double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
+
+        String betText = betField.getText ();
+        if(betText == null || betText.isEmpty ()){
+            // Qu'estce que tu veux faire si ya rien dans la text-box
+            return false;
+        }
+
+        try{
+            double bet = Double.parseDouble ( betText );
+
+            if( bet < game.getMinBet () || bet > ( Math.min (game.getMaxBet (),game.getTotalMoney ()))){
+                // Qu'estce que tu veux faire si la bet est trop basse ou trop haute?
+                return false;
+            } else {
+                game.setBet ( bet );
+                return true;
+            }
+
+        }catch( NumberFormatException nfe ){
+            // Qu'estce que tu veux faire si c'est pas un chiffre?
+            return false;
+        }
     }
-    private static String getHitOrStand () {
+    /*private String getHitOrStand () {
         System.out.println ();
         return Console.getString ( "Do you wish to Hit or Stand? (Press h or s) : ", new String[]{"h", "s"} );
-    }
-    private static void showHands () {
+    }*/
+    private void showHands () {
         showPlayerHand ();
-        System.out.println ();
+        System.out.println ("In showHands");
         showDealerShowCard ();
+       // showDealerHand();
     }
-    private static void showDealerShowCard () {
+    private void showDealerShowCard () {
         System.out.println ( "SHOW DEALER'S CARD" );
         System.out.println ( game.getDealerShowCard ().display () );
         System.out.println ();
+
+        listCardDealer.getItems ().clear ();
+        listCardDealer.getItems ().add ( game.getDealerShowCard ().display () );
+
     }
-    private static void showDealerHand () {
+    private void showDealerHand () {
         System.out.println ( "DEALER'S CARDS" );
         for (Card card : game.getDealerHand ().getCards ()) {
             if ( card != null )
                 System.out.println ( card.display () );
         }
     }
-    private static void showPlayerHand () {
-        System.out.println ( "YOUR CARDS" );
+    private void showPlayerHand () {
+        listCardPlayer.getItems ().clear ();
+        System.out.println ( "Showing YOUR CARDS in UI" );
         for (Card card : game.getPlayerHand ().getCards ()) {
-            if ( card != null )
+            if ( card != null ){
                 System.out.println ( card.display () );
+                listCardPlayer.getItems ().add ( card.display () );
+            }
+
         }
     }
-    private static void showMoney () {
+    private void showMoney () {
         System.out.println ( "Total Money is : " + game.getTotalMoney () );
         System.out.println ();
     }
-    private static void showWinner () {
+    private void showWinner () {
         showPlayerHand ();
         System.out.println ();
         System.out.printf ( "YOUR POINTS: %d%n", game.getPlayerHand ().getPoints () );
@@ -157,16 +195,17 @@ public class BlackjackApp extends Application {
         grid.add(moneyField,1,0);
 
         grid.add(new Label ("Bet :"), 0,1);
-        betField = new TextField ("");
+        betField = new TextField ( "");
         grid.add(betField,1,1);
 
         grid.add(new Label ("DEALER"), 0,2);
 
         grid.add(new Label ("Cards :"),0,3);
-        ListView listCardDealer = new ListView ();
-        listCardDealer.getItems().add("Card : " + game.getDealerHand());
-        HBox dealerBox = new HBox(listCardDealer);
-        grid.add(listCardDealer,1,3);
+        listCardDealer = new ListView ();
+        //listCardDealer.getItems().add(game.getDealerHand ());
+        HBox dealerBox = new HBox( listCardDealer );
+        grid.add( listCardDealer,1,3);
+        //showDealerShowCard ();
 
         grid.add(new Label ("Points :"),0,4);
         pointField = new TextField ();
@@ -175,23 +214,27 @@ public class BlackjackApp extends Application {
         grid.add(new Label ("YOU"), 0,5);
 
         grid.add(new Label ("Cards :"),0,6);
-        ListView listCardPlayer = new ListView ();
-        listCardPlayer.getItems().add("Card : " + game.getPlayerHand());
-        HBox playerBox = new HBox(listCardPlayer);
-        grid.add(listCardPlayer,1,6);
+        listCardPlayer = new ListView ();
+        //listCardPlayer.getItems().add(game.getPlayerHand());
+        HBox playerBox = new HBox( listCardPlayer );
+        grid.add( listCardPlayer,1,6);
+
+        //showPlayerHand ();
 
         grid.add(new Label ("Points :"),0,7);
-        pointField = new TextField ();
+        pointField = new TextField ( );
         grid.add(pointField,1,7);
 
-        Button hitButton = new Button ("Hit");
-        hitButton.setOnAction (event -> hitButtonClicked());
+        hitButton = new Button ("Hit");
+        hitButton.setOnAction ( event -> hitButtonClicked());
+
+        hitButton.setDisable ( true );
 
         Button standButton = new Button ("Stand");
         standButton.setOnAction (event -> standButtonClicked());
 
         HBox buttonBox = new HBox(10);
-        buttonBox.getChildren ().add (hitButton);
+        buttonBox.getChildren ().add ( hitButton );
         buttonBox.getChildren ().add (standButton);
         grid.add (buttonBox,0,8,2,1);
 
@@ -222,18 +265,34 @@ public class BlackjackApp extends Application {
         resultField.setText ( "you've pressed Hit!" );
         System.out.println ( "you've pressed Hit!" );
         game.hit ();
+        game.isBlackjackOrBust ();
+        showHands();
     }
     private void standButtonClicked(){
         resultField.setText ( "you've pressed Stand!" );
         System.out.println ( "you've pressed Stand!" );
         game.stand ();
+        game.isBlackjackOrBust ();
+        game.isPush ();
+        game.playerWins ();
         showWinner ();
     }
     private void playButtonClicked(){
-        resultField.setText ( "you've pressed Play!" );
-        System.out.println ( "you've pressed Play!" );
-        game.resetHands ();
-        game.deal ();
+        resultField.setText ( "You've pressed Play! Awesome! Let's Play!" );
+        System.out.println ( "You've pressed Play!\nAwesome!\nLet's Play! \n\nFirst card:" );
+
+        boolean isBetOk = getFxBetAmount();
+        if(isBetOk){
+
+            game.resetHands ();
+            game.deal ();
+            showHands();
+            hitButton.setDisable ( false );
+
+        }else{
+            resultField.setText ( " Aye le cave, tu bets like shit " );
+        }
+
     }
     private void exitButtonClicked(){
         System.exit ( 0 );
