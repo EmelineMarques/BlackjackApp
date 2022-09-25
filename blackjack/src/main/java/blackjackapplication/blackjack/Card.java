@@ -11,19 +11,19 @@ public class Card {
         this.points = points;
     }
 
-    public Card (Card c) {
+    /*public Card (Card c) {
         this.suite = c.suite;
         this.rank = c.rank;
         this.points = c.points;
-    }
+    }*/
 
-    public String getSuite () {
+    /*public String getSuite () {
         return suite;
     }
 
     public String getRank () {
         return rank;
-    }
+    }*/
 
     public int getPoints () {
         return points;

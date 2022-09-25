@@ -28,12 +28,11 @@ public class BlackjackGame {
 
     public void resetMoney () {
         loadMoney ();
-        //this.totalMoney = 100;
     }
 
-    public boolean isValidBet (double localBetAmt) {
+    /*public boolean isValidBet (double localBetAmt) {
         return this.totalMoney >= localBetAmt && localBetAmt >= this.minBet && localBetAmt <= this.maxBet;
-    }
+    }*/
 
     public double getMinBet () {
         return minBet;
@@ -106,9 +105,9 @@ public class BlackjackGame {
         totalMoney = totalMoney - betAmount;
     }
 
-    public void saveMoney () {
+    /*public void saveMoney () {
         //created this method because I had an error in BlackjackApp, line 122
-    }
+    }*/
 
     public void resetHands () {
         //Created resetHands so it's simpler to reset both player and dealer hands.

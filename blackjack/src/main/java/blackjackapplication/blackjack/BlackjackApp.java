@@ -16,11 +16,16 @@ public class BlackjackApp extends Application {
     static BlackjackGame game;
     private TextField moneyField;
     private TextField betField;
-    private TextField pointField;
     private TextField resultField;
     private ListView listCardDealer;
     private ListView listCardPlayer;
     private Button hitButton;
+    private Button standButton;
+    private Button playButton;
+    private Button exitButton;
+    private boolean isBetOk;
+    private TextField pointFieldDealer;
+    private TextField pointFieldPlayer;
 
     public static void main (String[] args) {
 
@@ -34,7 +39,7 @@ public class BlackjackApp extends Application {
         game = new BlackjackGame ();
 
         // Launches the app
-        launch (args);
+        launch ( args );
 
         /* Was useful only when we played from the Terminal
         while ( playAgain.equalsIgnoreCase ( "y" ) ) {
@@ -72,7 +77,7 @@ public class BlackjackApp extends Application {
         System.out.println ( "\nBye!" );*/
     }
 
-    private boolean buyMoreChips () {
+    /*private boolean buyMoreChips () {
         String addMore = Console.getString ( "You are out of Money! \nWould you buy more? (Press y or n) : ", new String[]{"y", "n"} );
         if ( addMore.equalsIgnoreCase ( "y" ) ) {
             game.resetMoney ();
@@ -80,7 +85,7 @@ public class BlackjackApp extends Application {
         } else {
             return false;
         }
-    }
+    }*/
 
     /*private void getBetAmount () {
         double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
@@ -89,212 +94,296 @@ public class BlackjackApp extends Application {
     }*/
     private boolean getFxBetAmount () {
         //double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
-
         String betText = betField.getText ();
-        if(betText == null || betText.isEmpty ()){
-            // Qu'estce que tu veux faire si ya rien dans la text-box
+        if ( betText == null || betText.isEmpty () ) {  // Qu'estce que tu veux faire si ya rien dans la text-box
             return false;
         }
-
-        try{
+        try {
             double bet = Double.parseDouble ( betText );
-
-            if( bet < game.getMinBet () || bet > ( Math.min (game.getMaxBet (),game.getTotalMoney ()))){
-                // Qu'estce que tu veux faire si la bet est trop basse ou trop haute?
+            if ( bet < game.getMinBet () || bet > ( Math.min ( game.getMaxBet (), game.getTotalMoney () ) ) ) { // Qu'estce que tu veux faire si la bet est trop basse ou trop haute?
                 return false;
             } else {
                 game.setBet ( bet );
                 return true;
             }
-
-        }catch( NumberFormatException nfe ){
-            // Qu'estce que tu veux faire si c'est pas un chiffre?
+        } catch (NumberFormatException nfe) { // Qu'estce que tu veux faire si c'est pas un chiffre?
             return false;
         }
     }
+
     /*private String getHitOrStand () {
         System.out.println ();
         return Console.getString ( "Do you wish to Hit or Stand? (Press h or s) : ", new String[]{"h", "s"} );
     }*/
     private void showHands () {
         showPlayerHand ();
-        System.out.println ("In showHands");
+        //System.out.println ("In showHands");
         showDealerShowCard ();
-       // showDealerHand();
     }
-    private void showDealerShowCard () {
-        System.out.println ( "SHOW DEALER'S CARD" );
-        System.out.println ( game.getDealerShowCard ().display () );
-        System.out.println ();
 
+    private void showDealerShowCard () {
         listCardDealer.getItems ().clear ();
+        System.out.println ( "Showing the dealer's card in UI" );
+        //System.out.println ( game.getDealerShowCard ().display () );
+        //System.out.println ();
+
         listCardDealer.getItems ().add ( game.getDealerShowCard ().display () );
 
     }
+
     private void showDealerHand () {
-        System.out.println ( "DEALER'S CARDS" );
+        listCardDealer.getItems ().clear ();
+        System.out.println ( "Showing the dealer's cards in UI" );
         for (Card card : game.getDealerHand ().getCards ()) {
-            if ( card != null )
-                System.out.println ( card.display () );
+            if ( card != null ) {
+                //System.out.println ( card.display () );
+                listCardDealer.getItems ().add ( card.display () );
+            }
         }
+        pointFieldDealer.setText ( String.valueOf ( game.getDealerHand ().getPoints () ) );
     }
+
     private void showPlayerHand () {
         listCardPlayer.getItems ().clear ();
-        System.out.println ( "Showing YOUR CARDS in UI" );
+        System.out.println ( "Showing your cards in UI" );
         for (Card card : game.getPlayerHand ().getCards ()) {
-            if ( card != null ){
-                System.out.println ( card.display () );
+            if ( card != null ) {
+                //System.out.println ( card.display () );
                 listCardPlayer.getItems ().add ( card.display () );
             }
-
         }
+        pointFieldPlayer.setText ( String.valueOf ( game.getPlayerHand ().getPoints () ) );
     }
-    private void showMoney () {
-        System.out.println ( "Total Money is : " + game.getTotalMoney () );
-        System.out.println ();
+    /*private void showMoney () {
+        game.getTotalMoney ();
     }
     private void showWinner () {
-        showPlayerHand ();
+        //showPlayerHand ();
         System.out.println ();
         System.out.printf ( "YOUR POINTS: %d%n", game.getPlayerHand ().getPoints () );
         System.out.println ();
-        showDealerHand ();
+        //showDealerHand ();
         System.out.println ();
         System.out.printf ( "DEALER'S POINTS: %d%n%n", game.getDealerHand ().getPoints () );
         if ( game.isPush () ) {
             System.out.println ( "Push!" );
         } else if ( game.getPlayerHand ().isBlackjack () ) {
             System.out.println ( "BLACKJACK! You win!" );
-            game.addBlackjackToTotal ();
+            //game.addBlackjackToTotal ();
         } else if ( game.playerWins () ) {
             System.out.println ( "You win!" );
-            game.addBetToTotal ();
+            //game.addBetToTotal ();
         } else {
             System.out.println ( "Sorry, you lose." );
-            game.subtractBetFromTotal ();
+            //game.subtractBetFromTotal ();
         }
         showMoney ();
         game.saveMoney ();
-    }
+    }*/
+
     @Override
-    public void start (Stage stage){
+    public void start (Stage stage) {
 
-        stage.setTitle ("Blackjack");
-        GridPane grid = new GridPane();
-        grid.setAlignment ( Pos.TOP_LEFT);
-        grid.setPadding (new Insets (25,25,25,25));
-        grid.setHgap (10);
-        grid.setVgap (10);
+        stage.setTitle ( "Blackjack" );
+        GridPane grid = new GridPane ();
+        grid.setAlignment ( Pos.TOP_LEFT );
+        grid.setPadding ( new Insets ( 25, 25, 25, 25 ) );
+        grid.setHgap ( 10 );
+        grid.setVgap ( 10 );
 
-        Scene scene = new Scene (grid, 400,700);
+        Scene scene = new Scene ( grid, 400, 700 );
 
-        grid.add(new Label ("Money :"), 0,0);
+        grid.add ( new Label ( "Money :" ), 0, 0 );
         moneyField = new TextField ();
-        moneyField.setText("$" + game.getTotalMoney ()); //va falloir faire une conversion de Double à String
-        moneyField.setEditable (false);
-        grid.add(moneyField,1,0);
+        moneyField.setText ( String.valueOf ( game.getTotalMoney () ) );
+        moneyField.setEditable ( false );
+        grid.add ( moneyField, 1, 0 );
 
-        grid.add(new Label ("Bet :"), 0,1);
-        betField = new TextField ( "");
-        grid.add(betField,1,1);
+        grid.add ( new Label ( "Bet :" ), 0, 1 );
+        betField = new TextField ( "" );
+        grid.add ( betField, 1, 1 );
 
-        grid.add(new Label ("DEALER"), 0,2);
+        grid.add ( new Label ( "DEALER" ), 0, 2 );
 
-        grid.add(new Label ("Cards :"),0,3);
+        grid.add ( new Label ( "Cards :" ), 0, 3 );
         listCardDealer = new ListView ();
-        //listCardDealer.getItems().add(game.getDealerHand ());
-        HBox dealerBox = new HBox( listCardDealer );
-        grid.add( listCardDealer,1,3);
-        //showDealerShowCard ();
+        HBox dealerBox = new HBox ( listCardDealer );
+        grid.add ( listCardDealer, 1, 3 );
 
-        grid.add(new Label ("Points :"),0,4);
-        pointField = new TextField ();
-        grid.add(pointField,1,4);
+        grid.add ( new Label ( "Points :" ), 0, 4 );
+        pointFieldDealer = new TextField ();
+        grid.add ( pointFieldDealer, 1, 4 );
 
-        grid.add(new Label ("YOU"), 0,5);
+        grid.add ( new Label ( "YOU" ), 0, 5 );
 
-        grid.add(new Label ("Cards :"),0,6);
+        grid.add ( new Label ( "Cards :" ), 0, 6 );
         listCardPlayer = new ListView ();
-        //listCardPlayer.getItems().add(game.getPlayerHand());
-        HBox playerBox = new HBox( listCardPlayer );
-        grid.add( listCardPlayer,1,6);
+        HBox playerBox = new HBox ( listCardPlayer );
+        grid.add ( listCardPlayer, 1, 6 );
 
-        //showPlayerHand ();
+        grid.add ( new Label ( "Points :" ), 0, 7 );
+        pointFieldPlayer = new TextField ();
+        grid.add ( pointFieldPlayer, 1, 7 );
 
-        grid.add(new Label ("Points :"),0,7);
-        pointField = new TextField ( );
-        grid.add(pointField,1,7);
-
-        hitButton = new Button ("Hit");
-        hitButton.setOnAction ( event -> hitButtonClicked());
-
+        hitButton = new Button ( "Hit" );
+        hitButton.setOnAction ( event -> hitButtonClicked () );
         hitButton.setDisable ( true );
 
-        Button standButton = new Button ("Stand");
-        standButton.setOnAction (event -> standButtonClicked());
+        standButton = new Button ( "Stand" );
+        standButton.setOnAction ( event -> standButtonClicked () );
+        standButton.setDisable ( true );
 
-        HBox buttonBox = new HBox(10);
+        HBox buttonBox = new HBox ( 10 );
         buttonBox.getChildren ().add ( hitButton );
-        buttonBox.getChildren ().add (standButton);
-        grid.add (buttonBox,0,8,2,1);
+        buttonBox.getChildren ().add ( standButton );
+        grid.add ( buttonBox, 0, 8, 2, 1 );
 
-        grid.add(new Label ("RESULT :"),0,9);
-        resultField = new TextField ("");
-        grid.add(resultField,1,9);
+        grid.add ( new Label ( "RESULT :" ), 0, 9 );
+        resultField = new TextField ();
+        grid.add ( resultField, 1, 9 );
 
-        Button playButton = new Button ("Play");
-        playButton.setOnAction (event -> playButtonClicked());
+        playButton = new Button ( "Play" );
+        playButton.setOnAction ( event -> playButtonClicked () );
+        playButton.setDisable ( false );
 
-        Button exitButton = new Button ("Exit");
-        exitButton.setOnAction (event -> exitButtonClicked());
+        exitButton = new Button ( "Exit" );
+        exitButton.setOnAction ( event -> exitButtonClicked () );
+        exitButton.setDisable ( false );
 
-        HBox buttonBox2 = new HBox(10);
-        buttonBox2.getChildren ().add (playButton);
-        buttonBox2.getChildren ().add (exitButton);
-        grid.add (buttonBox2,0,10,2,1);
+        HBox buttonBox2 = new HBox ( 10 );
+        buttonBox2.getChildren ().add ( playButton );
+        buttonBox2.getChildren ().add ( exitButton );
+        grid.add ( buttonBox2, 0, 10, 2, 1 );
 
-        Scene scene2 = new Scene (dealerBox,200,100);
-        Scene scene3 = new Scene (playerBox,200,100);
-        stage.setScene (scene2);
-        stage.setScene (scene3);
-        stage.setScene (scene);
+        Scene scene2 = new Scene ( dealerBox, 200, 100 );
+        Scene scene3 = new Scene ( playerBox, 200, 100 );
+        stage.setScene ( scene2 );
+        stage.setScene ( scene3 );
+        stage.setScene ( scene );
         stage.show ();
     }
 
-    private void hitButtonClicked(){
-        resultField.setText ( "you've pressed Hit!" );
+    private void hitButtonClicked () {
+        resultField.setText ( "Hit!" );
         System.out.println ( "you've pressed Hit!" );
-        game.hit ();
-        game.isBlackjackOrBust ();
-        showHands();
-    }
-    private void standButtonClicked(){
-        resultField.setText ( "you've pressed Stand!" );
-        System.out.println ( "you've pressed Stand!" );
-        game.stand ();
-        game.isBlackjackOrBust ();
-        game.isPush ();
-        game.playerWins ();
-        showWinner ();
-    }
-    private void playButtonClicked(){
-        resultField.setText ( "You've pressed Play! Awesome! Let's Play!" );
-        System.out.println ( "You've pressed Play!\nAwesome!\nLet's Play! \n\nFirst card:" );
 
-        boolean isBetOk = getFxBetAmount();
-        if(isBetOk){
+        game.hit ();
+        showPlayerHand ();
+        showDealerShowCard ();
+
+        if ( game.isBlackjackOrBust () ) {
+            if ( game.getPlayerHand ().isBlackjack () ) {
+                game.addBlackjackToTotal ();
+                pointFieldDealer.setText ( String.valueOf ( game.getDealerHand ().getPoints () ) );
+                resultField.setText ( "Blackjack! You won!" );
+            } else if ( game.getPlayerHand ().isBust () ) {
+                game.subtractBetFromTotal ();
+                pointFieldDealer.setText ( String.valueOf ( game.getDealerHand ().getPoints () ) );
+                resultField.setText ( "Busted! You lost!" );
+            }
+
+            //Buttons
+            hitButton.setDisable ( true );
+            standButton.setDisable ( true );
+            playButton.setDisable ( false );
+            exitButton.setDisable ( false );
+
+            //Adjust Total Money only in the case of a blackjack OR a bust.
+            moneyField.setText ( String.valueOf ( game.getTotalMoney () ) );
+
+        } else {
+            resultField.setText ( "Hit again!" );
+        }
+    }
+
+    private void standButtonClicked () {
+        resultField.setText ( "Stand!" );
+        System.out.println ( "you've pressed Stand!" );
+
+        game.stand ();
+        showPlayerHand ();
+        showDealerHand ();
+
+        if ( game.isBlackjackOrBust () ) {
+            if ( game.getPlayerHand ().isBlackjack () ) {
+                game.addBlackjackToTotal ();
+                resultField.setText ( "Blackjack! You won!" );
+            } else if ( game.getPlayerHand ().isBust () ) {
+                game.subtractBetFromTotal ();
+                resultField.setText ( "Busted! You lost!" );
+            } else if ( game.getDealerHand ().isBlackjack () ) {
+                game.subtractBetFromTotal ();
+                resultField.setText ( "You lost! Blackjack for the Dealer!" );
+            } else if ( game.getDealerHand ().isBust () ) {
+                game.addBetToTotal ();
+                resultField.setText ( "You won! Dealer has busted!" );
+            }
+
+            //Buttons
+            hitButton.setDisable ( true );
+            standButton.setDisable ( true );
+            playButton.setDisable ( false );
+            exitButton.setDisable ( false );
+
+        } else if ( game.isPush () ) {
+            resultField.setText ( "Push!" );
+        } else if ( game.playerWins () ) {
+            game.addBetToTotal ();
+            resultField.setText ( "You won!" );
+        } else {
+            game.subtractBetFromTotal ();
+            resultField.setText ( "You lost!" );
+        }
+        //Buttons
+        hitButton.setDisable ( true );
+        standButton.setDisable ( true );
+        playButton.setDisable ( false );
+        exitButton.setDisable ( false );
+
+        //Adjust Total Money in the bank no matter the result
+        moneyField.setText ( String.valueOf ( game.getTotalMoney () ) );
+
+    }
+
+    private void playButtonClicked () {
+        resultField.setText ( "Awesome! Let's Play!" );
+        System.out.println ( "You've pressed Play!" );
+
+        //Adjust Total Money to $100 if it's lower than $5
+        if ( game.isOutOfMoney () ) {
+            game.resetMoney ();
+            moneyField.setText ( String.valueOf ( 100.0 ) );
+        }
+
+        isBetOk = getFxBetAmount ();
+
+        if ( isBetOk ) {
 
             game.resetHands ();
             game.deal ();
-            showHands();
+            showHands ();
+
+            //Buttons
             hitButton.setDisable ( false );
+            standButton.setDisable ( false );
+            playButton.setDisable ( true );
+            exitButton.setDisable ( true );
 
-        }else{
-            resultField.setText ( " Aye le cave, tu bets like shit " );
+            //Points
+            pointFieldDealer.clear ();
+            pointFieldPlayer.clear ();
+            pointFieldPlayer.setText ( String.valueOf ( game.getPlayerHand ().getPoints () ) );
+
+        } else {
+            resultField.setText ( "Bet must be greater than $5 and less than or equal $1000, and can't be greater than the money in the bank." );
+
+            //Points
+            pointFieldDealer.clear ();
+            pointFieldPlayer.clear ();
         }
-
     }
-    private void exitButtonClicked(){
+
+    private void exitButtonClicked () {
         System.exit ( 0 );
     }
 }

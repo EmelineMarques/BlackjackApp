@@ -26,7 +26,6 @@ public class Deck {
     }
 
     private void shuffleDeck () {
-        //We used Random Class instead of a Math.random because it was simpler.
         Random r = new Random ();
         for (int i = 51; i > 0; i--) {
             int randomCard = r.nextInt (i+1 );

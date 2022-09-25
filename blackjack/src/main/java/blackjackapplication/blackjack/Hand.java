@@ -51,7 +51,6 @@ public class Hand {
     }
 
     public void resetHand () {
-        //Created resetHand so it's simpler to reset both player and dealer hands.
         this.hand = new Card[10];
         this.counter = 0;
     }
