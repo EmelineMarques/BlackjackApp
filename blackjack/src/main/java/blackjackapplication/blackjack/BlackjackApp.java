@@ -334,6 +334,7 @@ public class BlackjackApp extends Application {
             game.subtractBetFromTotal ();
             resultField.setText ( "You lost!" );
         }
+
         //Buttons
         hitButton.setDisable ( true );
         standButton.setDisable ( true );
