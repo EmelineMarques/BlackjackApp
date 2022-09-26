@@ -35,108 +35,44 @@ public class BlackjackApp extends Application {
         System.out.println ( "***** Pop-up window is open. *****" );
         System.out.println ( "**********************************" );
 
-        //String playAgain = "y";
         game = new BlackjackGame ();
-
-        // Launches the app
         launch ( args );
-
-        /* Was useful only when we played from the Terminal
-        while ( playAgain.equalsIgnoreCase ( "y" ) ) {
-            showMoney ();
-            if ( game.isOutOfMoney () ) {
-                if ( !buyMoreChips () )
-                    break;
-            }
-            getBetAmount ();
-            game.deal ();
-            showHands ();
-            System.out.printf ( "Your points: %d%n", game.getPlayerHand ().getPoints () );
-            if ( game.isBlackjackOrBust () ) {
-                showWinner ();
-            }
-            while ( getHitOrStand ().equalsIgnoreCase ( "h" ) ) {
-                game.hit ();
-                if ( game.isBlackjackOrBust () )
-                    break;
-                System.out.println ();
-                showPlayerHand ();
-                System.out.println ();
-                System.out.printf ( "Your points: %d%n", game.getPlayerHand ().getPoints () );
-            }
-            game.stand ();
-            System.out.println ();
-            showWinner ();
-            playAgain = Console.getString ( "Continue? (y/n): ", new String[]{"y", "n"} );
-            System.out.println ();
-            game.resetHands ();
-            if ( playAgain.equalsIgnoreCase ( "n" ) ) {
-                break;
-            }
-        }
-        System.out.println ( "\nBye!" );*/
     }
 
-    /*private boolean buyMoreChips () {
-        String addMore = Console.getString ( "You are out of Money! \nWould you buy more? (Press y or n) : ", new String[]{"y", "n"} );
-        if ( addMore.equalsIgnoreCase ( "y" ) ) {
-            game.resetMoney ();
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
-    /*private void getBetAmount () {
-        double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
-        game.setBet ( betAmount );
-        System.out.println ();
-    }*/
     private boolean getFxBetAmount () {
-        //double betAmount = Console.getDouble ( "Bet amount : ", game.getMinBet (), Math.min ( game.getMaxBet (), game.getTotalMoney () ) );
         String betText = betField.getText ();
-        if ( betText == null || betText.isEmpty () ) {  // Qu'estce que tu veux faire si ya rien dans la text-box
+        if ( betText == null || betText.isEmpty () ) {
             return false;
         }
         try {
             double bet = Double.parseDouble ( betText );
-            if ( bet < game.getMinBet () || bet > ( Math.min ( game.getMaxBet (), game.getTotalMoney () ) ) ) { // Qu'estce que tu veux faire si la bet est trop basse ou trop haute?
+            if ( bet < game.getMinBet () || bet > ( Math.min ( game.getMaxBet (), game.getTotalMoney () ) ) ) {
                 return false;
             } else {
                 game.setBet ( bet );
                 return true;
             }
-        } catch (NumberFormatException nfe) { // Qu'estce que tu veux faire si c'est pas un chiffre?
+        } catch (NumberFormatException nfe) {
             return false;
         }
     }
 
-    /*private String getHitOrStand () {
-        System.out.println ();
-        return Console.getString ( "Do you wish to Hit or Stand? (Press h or s) : ", new String[]{"h", "s"} );
-    }*/
     private void showHands () {
         showPlayerHand ();
-        //System.out.println ("In showHands");
         showDealerShowCard ();
     }
 
     private void showDealerShowCard () {
         listCardDealer.getItems ().clear ();
         System.out.println ( "Showing the dealer's card in UI" );
-        //System.out.println ( game.getDealerShowCard ().display () );
-        //System.out.println ();
-
         listCardDealer.getItems ().add ( game.getDealerShowCard ().display () );
-
     }
 
     private void showDealerHand () {
         listCardDealer.getItems ().clear ();
-        System.out.println ( "Showing the dealer's cards in UI" );
+        System.out.println ( "Showing the dealer's hand in UI" );
         for (Card card : game.getDealerHand ().getCards ()) {
             if ( card != null ) {
-                //System.out.println ( card.display () );
                 listCardDealer.getItems ().add ( card.display () );
             }
         }
@@ -145,41 +81,14 @@ public class BlackjackApp extends Application {
 
     private void showPlayerHand () {
         listCardPlayer.getItems ().clear ();
-        System.out.println ( "Showing your cards in UI" );
+        System.out.println ( "Showing your hand in UI" );
         for (Card card : game.getPlayerHand ().getCards ()) {
             if ( card != null ) {
-                //System.out.println ( card.display () );
                 listCardPlayer.getItems ().add ( card.display () );
             }
         }
         pointFieldPlayer.setText ( String.valueOf ( game.getPlayerHand ().getPoints () ) );
     }
-    /*private void showMoney () {
-        game.getTotalMoney ();
-    }
-    private void showWinner () {
-        //showPlayerHand ();
-        System.out.println ();
-        System.out.printf ( "YOUR POINTS: %d%n", game.getPlayerHand ().getPoints () );
-        System.out.println ();
-        //showDealerHand ();
-        System.out.println ();
-        System.out.printf ( "DEALER'S POINTS: %d%n%n", game.getDealerHand ().getPoints () );
-        if ( game.isPush () ) {
-            System.out.println ( "Push!" );
-        } else if ( game.getPlayerHand ().isBlackjack () ) {
-            System.out.println ( "BLACKJACK! You win!" );
-            //game.addBlackjackToTotal ();
-        } else if ( game.playerWins () ) {
-            System.out.println ( "You win!" );
-            //game.addBetToTotal ();
-        } else {
-            System.out.println ( "Sorry, you lose." );
-            //game.subtractBetFromTotal ();
-        }
-        showMoney ();
-        game.saveMoney ();
-    }*/
 
     @Override
     public void start (Stage stage) {
@@ -200,7 +109,7 @@ public class BlackjackApp extends Application {
         grid.add ( moneyField, 1, 0 );
 
         grid.add ( new Label ( "Bet :" ), 0, 1 );
-        betField = new TextField ( "" );
+        betField = new TextField ();
         grid.add ( betField, 1, 1 );
 
         grid.add ( new Label ( "DEALER" ), 0, 2 );
@@ -354,6 +263,8 @@ public class BlackjackApp extends Application {
         if ( game.isOutOfMoney () ) {
             game.resetMoney ();
             moneyField.setText ( String.valueOf ( 100.0 ) );
+            System.out.println ( "Reloading to $100.00." );
+            resultField.setText ( "You're out of money! Reloading to $100.00." );
         }
 
         isBetOk = getFxBetAmount ();

@@ -10,29 +10,12 @@ public class Card {
         this.rank = rank;
         this.points = points;
     }
-
-    /*public Card (Card c) {
-        this.suite = c.suite;
-        this.rank = c.rank;
-        this.points = c.points;
-    }*/
-
-    /*public String getSuite () {
-        return suite;
-    }
-
-    public String getRank () {
-        return rank;
-    }*/
-
     public int getPoints () {
         return points;
     }
-
     public boolean isAce () {
         return rank.equalsIgnoreCase ( "ace" );
     }
-
     public String display () {
         return this.rank + " of " + this.suite;
     }

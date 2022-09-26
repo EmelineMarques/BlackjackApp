@@ -9,7 +9,6 @@ public class Hand {
         this.user = user;
         this.hand = new Card[10];
     }
-
     public Card[] getCards () {
         return this.hand;
     }
@@ -35,21 +34,17 @@ public class Hand {
         }
         return total;
     }
-
     public void addCard (Card card) {
         if ( card != null )
             this.hand[counter] = card;
         counter++;
     }
-
     public boolean isBlackjack () {
         return getPoints () == 21;
     }
-
     public boolean isBust () {
         return getPoints () > 21;
     }
-
     public void resetHand () {
         this.hand = new Card[10];
         this.counter = 0;

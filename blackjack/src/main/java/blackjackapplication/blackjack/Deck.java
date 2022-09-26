@@ -24,7 +24,6 @@ public class Deck {
         }
         shuffleDeck ();
     }
-
     private void shuffleDeck () {
         Random r = new Random ();
         for (int i = 51; i > 0; i--) {
@@ -34,7 +33,6 @@ public class Deck {
             deck[randomCard] = temporary;
         }
     }
-
     public Card drawCard () {
         if ( currentCardIndex == 51 ) {
             Card currCard = deck[currentCardIndex];

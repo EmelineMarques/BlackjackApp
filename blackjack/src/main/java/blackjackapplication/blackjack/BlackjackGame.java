@@ -8,7 +8,6 @@ public class BlackjackGame {
     private final double maxBet;
     private double betAmount;
     private double totalMoney;
-
     public BlackjackGame () {
         this.deck = new Deck ();
         this.playerHand = new Hand ( "player" );
@@ -17,100 +16,71 @@ public class BlackjackGame {
         this.maxBet = 1000.0;
         this.totalMoney = 100;
     }
-
     public void loadMoney () {
         totalMoney = 100;
     }
-
     public boolean isOutOfMoney () {
         return this.totalMoney < this.minBet;
     }
-
     public void resetMoney () {
         loadMoney ();
     }
-
-    /*public boolean isValidBet (double localBetAmt) {
-        return this.totalMoney >= localBetAmt && localBetAmt >= this.minBet && localBetAmt <= this.maxBet;
-    }*/
-
     public double getMinBet () {
         return minBet;
     }
-
     public double getMaxBet () {
         return maxBet;
     }
-
     public double getTotalMoney () {
         return totalMoney;
     }
-
     public void setBet (double amt) {
         this.betAmount = amt;
     }
-
     public void deal () {
         playerHand.addCard ( deck.drawCard () );
         playerHand.addCard ( deck.drawCard () );
         dealerHand.addCard ( deck.drawCard () );
         dealerHand.addCard ( deck.drawCard () );
     }
-
     public void hit () {
         playerHand.addCard ( deck.drawCard () );
     }
-
     public void stand () {
         while ( this.dealerHand.getPoints () < 17 ) {
             dealerHand.addCard ( deck.drawCard () );
         }
     }
-
     public Card getDealerShowCard () {
         return dealerHand.getCards ()[1];
     }
-
     public Hand getDealerHand () {
         return dealerHand;
     }
-
     public Hand getPlayerHand () {
         return playerHand;
     }
-
     public boolean isBlackjackOrBust () {
         return this.playerHand.isBlackjack () || this.playerHand.isBust ()
                 || this.dealerHand.isBlackjack () || this.dealerHand.isBust ();
     }
-
     public boolean isPush () {
         return ( this.playerHand.getPoints () <= 21 ) && ( this.playerHand.getPoints () == this.dealerHand.getPoints () );
     }
-
     public boolean playerWins () {
         return ( this.dealerHand.getPoints () > 21 || this.playerHand.getPoints () == 21 )
                 && ( this.playerHand.getPoints () > this.dealerHand.getPoints () || this.dealerHand.getPoints () < this.playerHand.getPoints () );
     }
-
     public void addBetToTotal () {
         totalMoney = totalMoney + betAmount;
     }
-
     public void addBlackjackToTotal () {
         totalMoney = totalMoney + ( betAmount * 1.5 );
     }
-
     public void subtractBetFromTotal () {
         totalMoney = totalMoney - betAmount;
     }
-
-    /*public void saveMoney () {
-        //created this method because I had an error in BlackjackApp, line 122
-    }*/
-
     public void resetHands () {
-        //Created resetHands so it's simpler to reset both player and dealer hands.
         this.playerHand.resetHand ();
         this.dealerHand.resetHand ();
     }
