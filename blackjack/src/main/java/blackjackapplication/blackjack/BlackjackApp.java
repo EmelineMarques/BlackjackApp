@@ -121,6 +121,7 @@ public class BlackjackApp extends Application {
 
         grid.add ( new Label ( "Points :" ), 0, 4 );
         pointFieldDealer = new TextField ();
+        pointFieldDealer.setEditable ( false );
         grid.add ( pointFieldDealer, 1, 4 );
 
         grid.add ( new Label ( "YOU" ), 0, 5 );
@@ -132,6 +133,7 @@ public class BlackjackApp extends Application {
 
         grid.add ( new Label ( "Points :" ), 0, 7 );
         pointFieldPlayer = new TextField ();
+        pointFieldPlayer.setEditable ( false );
         grid.add ( pointFieldPlayer, 1, 7 );
 
         hitButton = new Button ( "Hit" );
@@ -149,6 +151,7 @@ public class BlackjackApp extends Application {
 
         grid.add ( new Label ( "RESULT :" ), 0, 9 );
         resultField = new TextField ();
+        resultField.setEditable ( false );
         grid.add ( resultField, 1, 9 );
 
         playButton = new Button ( "Play" );
@@ -199,6 +202,15 @@ public class BlackjackApp extends Application {
 
             //Adjust Total Money only in the case of a blackjack OR a bust.
             moneyField.setText ( String.valueOf ( game.getTotalMoney () ) );
+
+            //Vu que la partie est terminée, le betField se clear, afin de permettre une nouvelle partie.
+            betField.clear ();
+
+            //Cela permet de faire un reset sur le bet et de forcer le joueur a rentrer un chiffre.
+            betField.setText ( "Please place a bet." );
+
+            //On montre alors la main complète du dealer.
+            showDealerHand ();
 
         } else {
             resultField.setText ( "Hit again!" );
@@ -253,10 +265,16 @@ public class BlackjackApp extends Application {
         //Adjust Total Money in the bank no matter the result
         moneyField.setText ( String.valueOf ( game.getTotalMoney () ) );
 
+        //Vu que la partie est terminée, le betField se clear, afin de permettre une nouvelle partie.
+        betField.clear ();
+
+        //Cela permet de faire un reset sur le bet et de forcer le joueur a rentrer un chiffre.
+        betField.setText ( "Please place a bet." );
+
     }
 
     private void playButtonClicked () {
-        resultField.setText ( "Awesome! Let's Play!" );
+        resultField.setText ( "Awesome! Let's Play! First round!" );
         System.out.println ( "You've pressed Play!" );
 
         //Adjust Total Money to $100 if it's lower than $5
@@ -289,9 +307,17 @@ public class BlackjackApp extends Application {
         } else {
             resultField.setText ( "Bet must be greater than $5 and less than or equal $1000, and can't be greater than the money in the bank." );
 
-            //Points
+            //Message dans le betField pour forcer le bet avec un chiffre en cas d'erreur.
+            betField.setText ( "Please place a bet." );
+
+            //Points cleared.
             pointFieldDealer.clear ();
             pointFieldPlayer.clear ();
+
+            //les listcards sont cleared.
+            listCardPlayer.getItems ().clear ();
+            listCardDealer.getItems ().clear ();
+
         }
     }
 
